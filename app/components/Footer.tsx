@@ -23,7 +23,7 @@ export function Footer() {
                 <Heart className="w-6 h-6 text-white fill-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                Dillkatofa
+                Dilkatohfa
               </span>
             </div>
 
@@ -142,7 +142,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2 text-gray-600">
                 <Mail className="w-5 h-5 mt-1 flex-shrink-0" />
-                <span>support@dillkatofa.com</span>
+                <span>support@Dilkatohfa.com</span>
               </li>
               <li className="flex items-start gap-2 text-gray-600">
                 <MapPin className="w-5 h-5 mt-1 flex-shrink-0" />
@@ -155,7 +155,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="border-t border-pink-200 pt-8 text-center text-gray-600">
           <p>
-            &copy; 2026 Dillkatofa. All rights reserved. Made with love for special
+            &copy; 2026 Dilkatohfa. All rights reserved. Made with love for special
             moments.
           </p>
         </div>

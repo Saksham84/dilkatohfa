@@ -7,7 +7,8 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { ShoppingCartDrawer } from "./components/ShoppingCartDrawer";
 import { AuthModal } from "./components/AuthModal";
-import { Toaster } from "sonner";
+
+import { Toaster } from "react-hot-toast"; // ✅ correct toaster
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dillkatofa | Gifting Store",
+  title: "Dilkatohfa | Gifting Store",
   description: "Online gifting store for every occasion",
 };
 
@@ -38,9 +39,7 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Header />
 
-            <main className="flex-1">
-              {children}
-            </main>
+            <main className="flex-1">{children}</main>
 
             <Footer />
 
@@ -48,14 +47,25 @@ export default function RootLayout({
             <ShoppingCartDrawer />
             <AuthModal />
 
-            {/* Toast */}
+            {/* Toast Notifications */}
             <Toaster
               position="top-center"
-              richColors
+              reverseOrder={false}
               toastOptions={{
+                duration: 3000,
                 style: {
-                  background: "white",
-                  color: "#333",
+                  background: "#ffffff",
+                  color: "#333333",
+                },
+                success: {
+                  style: {
+                    border: "1px solid #22c55e",
+                  },
+                },
+                error: {
+                  style: {
+                    border: "1px solid #ef4444",
+                  },
                 },
               }}
             />

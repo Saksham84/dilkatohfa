@@ -1,9 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, ShoppingCart, User, Search, Menu, X } from "lucide-react";
+import {
+  Heart,
+  ShoppingCart,
+  User,
+  Search,
+  Menu,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import toast from "react-hot-toast";
 
 import { useApp } from "../context/AppContext";
 
@@ -22,6 +30,13 @@ export function Header() {
 
   const cartItemsCount = getCartItemsCount();
 
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logged out successfully");
+    setShowUserMenu(false);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-pink-100 shadow-sm">
       <div className="container mx-auto px-4">
@@ -33,7 +48,7 @@ export function Header() {
               <Heart className="w-6 h-6 text-white fill-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-              Dillkatofa
+              Dilkatohfa
             </span>
           </Link>
 
@@ -81,54 +96,58 @@ export function Header() {
             <div className="relative hidden sm:block">
               <button
                 onClick={() =>
-                  user ? setShowUserMenu(!showUserMenu) : setIsAuthOpen(true)
+                  user
+                    ? setShowUserMenu((prev) => !prev)
+                    : setIsAuthOpen(true)
                 }
                 className="p-2 hover:bg-pink-50 rounded-full"
               >
                 <User className="w-6 h-6 text-pink-500" />
               </button>
 
-              {user && showUserMenu && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-pink-100 overflow-hidden"
-                >
-                  <div className="p-3 border-b border-pink-100">
-                    <p className="font-semibold">{user.name}</p>
-                    <p className="text-sm text-gray-500">{user.email}</p>
-                  </div>
-
-                  <Link
-                    href="/orders"
-                    className="block px-4 py-2 hover:bg-pink-50"
+              <AnimatePresence>
+                {user && showUserMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-pink-100 overflow-hidden z-50"
                   >
-                    My Orders
-                  </Link>
+                    <div className="p-3 border-b border-pink-100">
+                      <p className="font-semibold">{user.name}</p>
+                      <p className="text-sm text-gray-500">{user.email}</p>
+                    </div>
 
-                  <Link
-                    href="/wishlist"
-                    className="block px-4 py-2 hover:bg-pink-50"
-                  >
-                    Wishlist
-                  </Link>
+                    <Link
+                      href="/orders"
+                      onClick={() => setShowUserMenu(false)}
+                      className="block px-4 py-2 hover:bg-pink-50"
+                    >
+                      My Orders
+                    </Link>
 
-                  <button
-                    onClick={() => {
-                      logout();
-                      setShowUserMenu(false);
-                    }}
-                    className="w-full text-left px-4 py-2 hover:bg-pink-50 text-red-600"
-                  >
-                    Logout
-                  </button>
-                </motion.div>
-              )}
+                    <Link
+                      href="/wishlist"
+                      onClick={() => setShowUserMenu(false)}
+                      className="block px-4 py-2 hover:bg-pink-50"
+                    >
+                      Wishlist
+                    </Link>
+
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 hover:bg-pink-50 text-red-600"
+                    >
+                      Logout
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
               className="md:hidden p-2 hover:bg-pink-50 rounded-full"
             >
               {isMobileMenuOpen ? (
@@ -196,7 +215,7 @@ export function Header() {
                 </Link>
               ))}
 
-              {!user && (
+              {!user ? (
                 <button
                   onClick={() => {
                     setIsAuthOpen(true);
@@ -204,7 +223,14 @@ export function Header() {
                   }}
                   className="w-full py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full"
                 >
-                  Login
+                  Login / Signup
+                </button>
+              ) : (
+                <button
+                  onClick={handleLogout}
+                  className="w-full py-2 text-red-600 border border-red-200 rounded-full"
+                >
+                  Logout
                 </button>
               )}
             </div>
