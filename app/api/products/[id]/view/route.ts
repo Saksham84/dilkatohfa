@@ -1,16 +1,25 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 
 export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  await connectDB();
+  try {
+    await connectDB();
 
-  await Product.findByIdAndUpdate(params.id, {
-    $inc: { views: 1 },
-  });
+    const { id } = await context.params;
 
-  return NextResponse.json({ success: true });
+    await Product.findByIdAndUpdate(id, {
+      $inc: { views: 1 },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to update views" },
+      { status: 500 }
+    );
+  }
 }

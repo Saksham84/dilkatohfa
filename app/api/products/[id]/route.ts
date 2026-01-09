@@ -1,17 +1,37 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 
+export const runtime = "nodejs";
+
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  await connectDB();
+  try {
+    await connectDB();
 
-  const product = await Product.findById(params.id);
-  if (!product) {
-    return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    const { id } = await context.params;
+
+    const product = await Product.findById(id).lean();
+
+    if (!product) {
+      return NextResponse.json(
+        { success: false, error: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    console.error("PRODUCT_FETCH_ERROR:", error);
+
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch product" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(product);
 }
