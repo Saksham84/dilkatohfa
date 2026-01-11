@@ -10,7 +10,7 @@ export const transporter = nodemailer.createTransport({
 
 export async function sendOtpEmail(email: string, otp: string) {
   await transporter.sendMail({
-    from: `"Trip Planner" <${process.env.EMAIL_USER}>`,
+    from: `"Dilkatohfa" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: "Your Password Reset OTP",
     html: `
